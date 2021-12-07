@@ -1,0 +1,11 @@
+[package]
+name = "advent-of-code-2021"
+authors = ["Drew Wyatt <drew.j.wyatt@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+license-file = "LICENSE"
+
+[[bin]]
+name = "day-1"
+
+[dependencies]
