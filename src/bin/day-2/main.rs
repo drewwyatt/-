@@ -27,6 +27,27 @@ fn part_one(course: &Vec<Command>) -> (usize, usize) {
   (position, depth)
 }
 
+fn part_two(course: &Vec<Command>) -> (usize, usize) {
+  let mut position = 0;
+  let mut depth = 0;
+
+  for command in course {
+    match command.direction {
+      Direction::Forward => {
+        position += command.delta;
+      }
+      Direction::Down => {
+        depth += command.delta;
+      }
+      Direction::Up => {
+        depth -= command.delta;
+      }
+    }
+  }
+
+  (position, depth)
+}
+
 #[cfg(test)]
 mod tests {
   use super::*;
@@ -46,6 +67,11 @@ mod tests {
   #[test]
   fn part_one_sample_input() {
     assert_eq!(part_one(&get_input()), (15, 10));
+  }
+
+  #[test]
+  fn part_two_sample_input() {
+    assert_eq!(part_two(&get_input()), (15, 60));
   }
 }
 
