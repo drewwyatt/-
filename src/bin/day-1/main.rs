@@ -1,3 +1,7 @@
+mod input;
+use input::read;
+use std::io;
+
 fn part_one(input: Vec<i64>) -> i64 {
   let mut number_of_increases = 0;
   let mut previous = std::i64::MAX;
@@ -23,6 +27,9 @@ mod tests {
   }
 }
 
-fn main() {
-  println!("Hello, day 1!");
+fn main() -> io::Result<()> {
+  let input = read()?;
+  let result = part_one(input);
+  println!("[Day 1, Part 1] There were {} increases.", result);
+  Ok(())
 }
