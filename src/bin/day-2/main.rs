@@ -30,17 +30,19 @@ fn part_one(course: &Vec<Command>) -> (usize, usize) {
 fn part_two(course: &Vec<Command>) -> (usize, usize) {
   let mut position = 0;
   let mut depth = 0;
+  let mut aim = 0;
 
   for command in course {
     match command.direction {
       Direction::Forward => {
         position += command.delta;
+        depth += aim * command.delta;
       }
       Direction::Down => {
-        depth += command.delta;
+        aim += command.delta;
       }
       Direction::Up => {
-        depth -= command.delta;
+        aim -= command.delta;
       }
     }
   }
@@ -78,13 +80,25 @@ mod tests {
 fn main() -> io::Result<()> {
   let input = read_input_for_day::<Command>(2)?;
 
-  let (position, depth) = part_one(&input);
-  println!(
-    "[Day 2, Part 1] Position: {}, Depth: {}, Product: {}.",
-    position,
-    depth,
-    position * depth
-  );
+  {
+    let (position, depth) = part_one(&input);
+    println!(
+      "[Day 2, Part 1] Position: {}, Depth: {}, Product: {}.",
+      position,
+      depth,
+      position * depth
+    );
+  }
+
+  {
+    let (position, depth) = part_two(&input);
+    println!(
+      "[Day 2, Part 2] Position: {}, Depth: {}, Product: {}.",
+      position,
+      depth,
+      position * depth
+    );
+  }
 
   Ok(())
 }
