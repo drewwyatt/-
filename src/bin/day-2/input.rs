@@ -30,8 +30,8 @@ impl FromStr for Direction {
 
 #[derive(Debug)]
 pub struct Command {
-  delta: usize,
-  direction: Direction,
+  pub delta: usize,
+  pub direction: Direction,
 }
 
 impl FromStr for Command {
