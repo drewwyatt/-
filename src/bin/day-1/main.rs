@@ -1,5 +1,4 @@
-mod input;
-use input::read;
+use advent::read_input_for_day;
 use std::io;
 
 fn part_one(input: &Vec<i64>) -> i64 {
@@ -55,7 +54,7 @@ mod tests {
 }
 
 fn main() -> io::Result<()> {
-  let input = read()?;
+  let input = read_input_for_day(1)?;
 
   println!("[Day 1, Part 1] There were {} increases.", part_one(&input));
   println!("[Day 1, Part 2] There were {} increases.", part_two(&input));
