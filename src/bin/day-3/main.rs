@@ -1,36 +1,23 @@
 use advent::read_input_for_day;
 use std::io;
 
-enum AdventError {
-  InvalidBit,
-}
-
 struct Position {
-  zeroes: usize,
-  ones: usize,
+  lines: Vec<u32>,
 }
 
 impl Position {
-  pub fn new() -> Position {
-    Position { zeroes: 0, ones: 0 }
-  }
-
-  pub fn push(&mut self, bit: &char) -> Result<(), AdventError> {
-    match bit {
-      '0' => {
-        self.zeroes += 1;
-        Ok(())
-      }
-      '1' => {
-        self.ones += 1;
-        Ok(())
-      }
-      _ => Err(AdventError::InvalidBit),
+  pub fn new(value: &char) -> Position {
+    Position {
+      lines: vec![value.to_digit(2).unwrap()],
     }
   }
 
+  pub fn push(&mut self, bit: &char) {
+    self.lines.push(bit.to_digit(2).unwrap());
+  }
+
   pub fn get_gamma(&self) -> &str {
-    if self.zeroes > self.ones {
+    if self.zeroes_count() > self.ones_count() {
       "0"
     } else {
       "1"
@@ -38,11 +25,19 @@ impl Position {
   }
 
   pub fn get_epsilon(&self) -> &str {
-    if self.zeroes > self.ones {
+    if self.zeroes_count() > self.ones_count() {
       "1"
     } else {
       "0"
     }
+  }
+
+  fn zeroes_count(&self) -> usize {
+    self.lines.iter().filter(|line| *line == &0).count()
+  }
+
+  fn ones_count(&self) -> usize {
+    self.lines.iter().filter(|line| *line == &1).count()
   }
 }
 
@@ -73,14 +68,11 @@ impl Diagnostic {
     epsilon
   }
 
-  pub fn push(&mut self, bit_index: usize, value: &char) -> Result<(), AdventError> {
+  pub fn push(&mut self, bit_index: usize, value: &char) {
     match self.positions.get_mut(bit_index) {
       Some(position) => position.push(value),
       None => {
-        let mut position = Position::new();
-        let res = position.push(value);
-        self.positions.push(position);
-        res
+        self.positions.push(Position::new(value));
       }
     }
   }
