@@ -26,7 +26,7 @@ impl Board {
 
   fn rows(&self) -> Vec<&[Space]> {
     let mut result: Vec<&[Space]> = vec![];
-    for i in 0..4 {
+    for i in 0..5 {
       let start = i * 5;
       let end = start + 5;
       result.push(&self.spaces[start..end]);
@@ -34,8 +34,13 @@ impl Board {
 
     result
   }
+
+  fn cols(&self) -> Vec<&[Space]> {
+    // ...
+  }
 }
 
+#[derive(Debug)]
 struct Space {
   pub marked: bool,
   number: usize,
