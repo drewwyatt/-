@@ -2,6 +2,9 @@ struct Board {
   spaces: Vec<Space>,
 }
 
+const NUM_COLS: usize = 5;
+const NUM_ROWS: usize = 5;
+
 impl Board {
   pub fn new(spaces: Vec<usize>) -> Board {
     Board {
@@ -22,21 +25,34 @@ impl Board {
       .rows()
       .iter()
       .any(|slice| slice.iter().all(|space| space.marked))
+      || self
+        .columns()
+        .iter_mut() // weird that this has to be mutable?
+        .any(|col| col.all(|space| space.marked))
   }
 
   fn rows(&self) -> Vec<&[Space]> {
     let mut result: Vec<&[Space]> = vec![];
-    for i in 0..5 {
-      let start = i * 5;
-      let end = start + 5;
+    for i in 0..NUM_ROWS {
+      let start = i * NUM_COLS;
+      let end = start + NUM_COLS;
       result.push(&self.spaces[start..end]);
     }
 
     result
   }
 
-  fn cols(&self) -> Vec<&[Space]> {
-    // ...
+  fn columns(&self) -> Vec<impl Iterator<Item = &Space>> {
+    let mut result = vec![];
+    for i in 0..NUM_COLS {
+      result.push(self.get_column(i));
+    }
+
+    result
+  }
+
+  fn get_column(&self, col_num: usize) -> impl Iterator<Item = &Space> {
+    self.spaces.iter().skip(col_num).step_by(NUM_COLS)
   }
 }
 
@@ -93,6 +109,10 @@ mod tests {
     board.check(13);
     board.check(17);
     board.check(11);
+
+    board.check(8);
+    board.check(21);
+    board.check(6);
     assert_eq!(board.is_winner(), false);
   }
 
@@ -103,6 +123,26 @@ mod tests {
       vec![22, 13, 17, 11, 0],
       vec![9, 18, 13, 17, 5],
       vec![18, 8, 23, 26, 20],
+    ];
+
+    for (index, group) in spaces.iter().enumerate() {
+      for space in group {
+        boards[index].check(*space);
+      }
+    }
+
+    for board in boards {
+      assert_eq!(board.is_winner(), true);
+    }
+  }
+
+  #[test]
+  fn can_recognize_winning_col() {
+    let mut boards = make_boards();
+    let spaces = vec![
+      vec![22, 8, 21, 6, 1],
+      vec![15, 18, 8, 11, 21],
+      vec![17, 15, 23, 13, 12],
     ];
 
     for (index, group) in spaces.iter().enumerate() {
