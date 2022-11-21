@@ -7,7 +7,20 @@ pub enum AdventError {
   InvalidRegex,
 }
 
-type Coord = (i32, i32);
+#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
+pub struct Coord {
+  pub x: i32,
+  pub y: i32,
+}
+
+impl Coord {
+  pub fn new(x: i32, y: i32) -> Self {
+    Coord {
+      x: x,
+      y: y,
+    }
+  }
+}
 
 pub struct Line {
   pub start: Coord,
@@ -15,12 +28,33 @@ pub struct Line {
 }
 
 impl Line {
-  pub fn is_horizontal(&self) -> bool {
-    self.start.0 == self.end.0
+  fn is_horizontal(&self) -> bool {
+    self.start.x == self.end.x
   }
 
-  pub fn is_vertical(&self) -> bool {
-    !&self.is_horizontal()
+  fn is_vertical(&self) -> bool {
+    self.start.y == self.end.y
+  }
+
+  pub fn segments(&self) -> Vec<Coord> {
+    let mut segments: Vec<Coord> = vec![];
+    if self.is_horizontal() {
+      let start = if self.start.y < self.end.y { self.start.y } else { self.end.y };
+      let end = if self.start.y < self.end.y { self.end.y } else { self.start.y };
+
+      for y in start..=end {
+        segments.push(Coord::new(self.start.x, y))
+      }
+    } else if self.is_vertical() {
+      let start = if self.start.x < self.end.x { self.start.x } else { self.end.x };
+      let end = if self.start.x < self.end.x { self.end.x } else { self.start.x };
+
+      for x in start..=end {
+        segments.push(Coord::new(x, self.start.y))
+      }
+    }
+
+    segments
   }
 }
 
@@ -40,7 +74,7 @@ impl FromStr for Line {
     let x2 = parse_from_named_captures_or(&captures, "x2", AdventError::InvalidRegex)?;
     let y2 = parse_from_named_captures_or(&captures, "y2", AdventError::InvalidRegex)?;
 
-    Ok(Line { start: (x1, y1), end: (x2, y2) })
+    Ok(Line { start: Coord::new(x1, y1), end: Coord::new(x2, y2) })
   }
 }
 
@@ -49,21 +83,32 @@ pub struct Graph {
 }
 
 impl Graph {
-  pub fn chart(&self, line: Line) {
-    if line.is_horizontal() {
-      let x = line.start.0;
-      for y in line.start.1..line.end.1 {
-        self.mark_coordinate(x, y);
-      }
-    } else {
-      let y = line.start.1;
-      for x in line.start.0..line.end.0 {
-        self.mark_coordinate(x, y);
-      }
+  pub fn new() -> Self {
+    Graph {
+      values: HashMap::new(),
     }
   }
 
-  fn mark_coordinate(&self, x: i32, y: i32) {
+  pub fn n_overlapping_points(&self) -> usize {
+    self.values
+      .iter()
+      .map(|(_, v)| v)
+      .filter(|v| v > &&1)
+      .collect::<Vec<&i32>>()
+      .len()
+  }
 
+  pub fn chart(&mut self, line: Line) {
+    for coord in line.segments() {
+      self.plot_coordinate(coord);
+    }
+  }
+
+  fn plot_coordinate(&mut self, key: Coord) {
+    if self.values.contains_key(&key) {
+      *self.values.get_mut(&key).unwrap() += 1;
+    } else {
+      self.values.insert(key, 1);
+    }
   }
 }
