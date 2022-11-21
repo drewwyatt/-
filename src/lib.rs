@@ -30,3 +30,16 @@ where
     .parse::<T>()
     .map_err(|_| err)
 }
+
+pub fn parse_from_named_captures_or<T, U>(captures: &Captures, name: &str, err: U) -> Result<T, U>
+where
+  T: FromStr,
+  U: Copy,
+{
+  captures
+    .name(name)
+    .ok_or(err)?
+    .as_str()
+    .parse::<T>()
+    .map_err(|_| err)
+}
