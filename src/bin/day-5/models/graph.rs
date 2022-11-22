@@ -25,7 +25,7 @@ impl Graph {
   }
 
   pub fn chart(&mut self, line: Line) {
-      for coord in line.segments() {
+      for coord in line.segments(self.chart_diagonals) {
           self.plot_coordinate(coord);
       }
   }

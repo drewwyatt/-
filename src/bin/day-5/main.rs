@@ -7,13 +7,13 @@ use models::graph::Graph;
 use models::line::Line;
 use std::io;
 
-fn part_one(input: Vec<Line>) -> io::Result<()> {
-    let mut graph = Graph::new(false);
+fn run(part: i8, include_diagonals: bool, input: Vec<Line>) -> io::Result<()> {
+    let mut graph = Graph::new(include_diagonals);
     for line in input {
         graph.chart(line);
     }
 
-    println!("part 1:");
+    println!("part {}:", part);
     println!(
         "    At least two lines overlap in {} points.",
         graph.n_overlapping_points()
@@ -22,8 +22,8 @@ fn part_one(input: Vec<Line>) -> io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let input = read_input_for_day::<Line>(5)?;
-    part_one(input)?;
+    run(1, false, read_input_for_day::<Line>(5)?)?;
+    run(2, true, read_input_for_day::<Line>(5)?)?;
 
     Ok(())
 }
@@ -59,5 +59,15 @@ mod tests {
         }
 
         assert_eq!(graph.n_overlapping_points(), 5)
+    }
+
+    #[test]
+    fn part_two() {
+        let mut graph = Graph::new(true);
+        for line in get_lines() {
+            graph.chart(line);
+        }
+
+        assert_eq!(graph.n_overlapping_points(), 12)
     }
 }
