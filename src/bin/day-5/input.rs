@@ -79,12 +79,14 @@ impl FromStr for Line {
 }
 
 pub struct Graph {
+  chart_diagonals: bool,
   values: HashMap<Coord, i32>
 }
 
 impl Graph {
-  pub fn new() -> Self {
+  pub fn new(chart_diagonals: bool) -> Self {
     Graph {
+      chart_diagonals,
       values: HashMap::new(),
     }
   }

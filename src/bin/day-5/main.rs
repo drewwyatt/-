@@ -6,26 +6,32 @@ use advent::read_input_for_day;
 use input::{Graph, Line};
 use std::io;
 
-fn main() -> io::Result<()> {
-  let input = read_input_for_day::<Line>(5)?;
-  let mut graph = Graph::new();
+fn part_one(input: Vec<Line>) -> io::Result<()> {
+  let mut graph = Graph::new(false);
   for line in input {
     graph.chart(line);
   }
 
-  println!("At least two lines overlap in {} points.", graph.n_overlapping_points());
+
+  println!("part 1:");
+  println!("    At least two lines overlap in {} points.", graph.n_overlapping_points());
   Ok(())
 }
 
+fn main() -> io::Result<()> {
+  let input = read_input_for_day::<Line>(5)?;
+  part_one(input)?;
+
+  Ok(())
+}
 
 #[cfg(test)]
 mod tests {
   use super::*;
   use std::str::FromStr;
 
-  #[test]
-  fn test_one() {
-    let lines: Vec<Line> = vec![
+  fn get_lines() -> Vec<Line> {
+    vec![
       "0,9 -> 5,9",
       "8,0 -> 0,8",
       "9,4 -> 3,4",
@@ -36,10 +42,13 @@ mod tests {
       "3,4 -> 1,4",
       "0,0 -> 8,8",
       "5,5 -> 8,2"
-    ].into_iter().map(|s| Line::from_str(s).unwrap()).collect();
+    ].into_iter().map(|s| Line::from_str(s).unwrap()).collect()
+  }
 
-    let mut graph = Graph::new();
-    for line in lines {
+  #[test]
+  fn part_one() {
+    let mut graph = Graph::new(false);
+    for line in get_lines() {
       graph.chart(line);
     }
 
