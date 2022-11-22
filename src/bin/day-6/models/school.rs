@@ -4,6 +4,7 @@ use std::str::FromStr;
 #[derive(Debug)]
 pub enum AdventError {}
 
+#[derive(Clone)]
 pub struct School {
   fish: Vec<Fish>,
 }

@@ -1,9 +1,22 @@
 mod models;
 use std::io;
 
+use advent::read_input_for_day;
 use models::school::School;
 
+fn simulate(mut school: School, days: i32) -> usize {
+  for _ in 0..days {
+    school.tick()
+  }
+
+  school.size()
+}
+
 fn main() -> io::Result<()> {
+  let school = read_input_for_day::<School>(6)?.get(0).unwrap().to_owned();
+  let size = simulate(school, 80);
+
+  println!("Part-1: After 80 days there are {} lantern fish.", size);
   Ok(())
 }
 
@@ -18,12 +31,10 @@ mod tests {
 
   #[test]
   fn part_one() {
-    let mut school = get_initial_state();
-    for _ in 0..80 {
-      school.tick();
-    }
+    let school = get_initial_state();
+    let size = simulate(school, 80);
 
-    assert_eq!(school.size(), 5934);
+    assert_eq!(size, 5934);
   }
 
   #[test]
