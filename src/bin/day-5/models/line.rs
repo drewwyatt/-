@@ -24,23 +24,23 @@ impl Line {
     }
 
     fn get_x_calculator(&self) -> impl Fn(i32) -> i32 + '_ {
-      |n| {
-        if self.start.x < self.end.x {
-          return self.start.x + n;
-        } else {
-          return self.start.x - n;
+        |n| {
+            if self.start.x < self.end.x {
+                return self.start.x + n;
+            } else {
+                return self.start.x - n;
+            }
         }
-      }
     }
 
     fn get_y_calculator(&self) -> impl Fn(i32) -> i32 + '_ {
-      |n| {
-        if self.start.y < self.end.y {
-          return self.start.y + n;
-        } else {
-          return self.start.y - n;
+        |n| {
+            if self.start.y < self.end.y {
+                return self.start.y + n;
+            } else {
+                return self.start.y - n;
+            }
         }
-      }
     }
 
     pub fn segments(&self, chart_diagonals: bool) -> Vec<Coord> {
@@ -76,19 +76,19 @@ impl Line {
                 segments.push(Coord::new(x, self.start.y))
             }
         } else if chart_diagonals {
-          let calc_x = self.get_x_calculator();
-          let calc_y = self.get_y_calculator();
-          let mut x = self.start.x;
-          let mut y = self.start.y;
-          let mut diff = 0;
+            let calc_x = self.get_x_calculator();
+            let calc_y = self.get_y_calculator();
+            let mut x = self.start.x;
+            let mut y = self.start.y;
+            let mut diff = 0;
 
-          while x != self.end.x && y != self.end.y {
-            x = calc_x(diff);
-            y = calc_y(diff);
-            segments.push(Coord::new(x, y));
+            while x != self.end.x && y != self.end.y {
+                x = calc_x(diff);
+                y = calc_y(diff);
+                segments.push(Coord::new(x, y));
 
-            diff += 1;
-          }
+                diff += 1;
+            }
         }
 
         segments
