@@ -1,9 +1,10 @@
 #[macro_use]
 extern crate lazy_static;
-mod input;
+mod models;
 
 use advent::read_input_for_day;
-use input::{Graph, Line};
+use models::graph::Graph;
+use models::line::Line;
 use std::io;
 
 fn part_one(input: Vec<Line>) -> io::Result<()> {

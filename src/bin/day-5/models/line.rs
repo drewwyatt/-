@@ -1,22 +1,12 @@
 use advent::parse_from_named_captures_or;
 use regex::Regex;
-use std::{collections::HashMap, str::FromStr};
+use std::str::FromStr;
+
+use super::coord::Coord;
 
 #[derive(Clone, Copy, Debug)]
 pub enum AdventError {
     InvalidRegex,
-}
-
-#[derive(Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
-pub struct Coord {
-    pub x: i32,
-    pub y: i32,
-}
-
-impl Coord {
-    pub fn new(x: i32, y: i32) -> Self {
-        Coord { x: x, y: y }
-    }
 }
 
 pub struct Line {
@@ -92,42 +82,5 @@ impl FromStr for Line {
             start: Coord::new(x1, y1),
             end: Coord::new(x2, y2),
         })
-    }
-}
-
-pub struct Graph {
-    chart_diagonals: bool,
-    values: HashMap<Coord, i32>,
-}
-
-impl Graph {
-    pub fn new(chart_diagonals: bool) -> Self {
-        Graph {
-            chart_diagonals,
-            values: HashMap::new(),
-        }
-    }
-
-    pub fn n_overlapping_points(&self) -> usize {
-        self.values
-            .iter()
-            .map(|(_, v)| v)
-            .filter(|v| v > &&1)
-            .collect::<Vec<&i32>>()
-            .len()
-    }
-
-    pub fn chart(&mut self, line: Line) {
-        for coord in line.segments() {
-            self.plot_coordinate(coord);
-        }
-    }
-
-    fn plot_coordinate(&mut self, key: Coord) {
-        if self.values.contains_key(&key) {
-            *self.values.get_mut(&key).unwrap() += 1;
-        } else {
-            self.values.insert(key, 1);
-        }
     }
 }
